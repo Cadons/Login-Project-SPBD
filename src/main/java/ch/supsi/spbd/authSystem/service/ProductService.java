@@ -1,7 +1,9 @@
 package ch.supsi.spbd.authSystem.service;
 
 import ch.supsi.spbd.authSystem.model.Customer;
+import ch.supsi.spbd.authSystem.model.Product;
 import ch.supsi.spbd.authSystem.repository.CustomerRepository;
+import ch.supsi.spbd.authSystem.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -11,28 +13,28 @@ import java.util.Optional;
 
 @Service
 @Component
-public class CustomerService {
+public class ProductService {
     @Autowired
-    CustomerRepository repository;
+    ProductRepository repository;
 
-    public List<Customer> getCustomers() {
-        return (List<Customer>) repository.findAll();
+    public List<Product> getProducts() {
+        return repository.findAll();
     }
 
-    public Customer getCustomer(long id) {
-        Optional<Customer> c = repository.findById(id);
+    public Product getProduct(long id) {
+        Optional<Product> c = repository.findById(id);
         if (c.isPresent())
             return c.get();
         else
             return null;
     }
-    public Customer addCustomer(Customer customer) {
+    public Product addProduct(Product product) {
 
-        return (Customer) repository.save(customer);
+        return (Product) repository.save(product);
     }
-    public boolean deleteCustomer(long customer) {
+    public boolean deleteProduct(long product) {
         try{
-            repository.deleteById(customer);
+            repository.deleteById(product);
             return true;
         }catch (Exception e)
         {
