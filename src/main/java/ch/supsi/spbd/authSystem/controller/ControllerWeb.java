@@ -1,24 +1,20 @@
 package ch.supsi.spbd.authSystem.controller;
 
-import ch.supsi.spbd.authSystem.model.Customer;
-import ch.supsi.spbd.authSystem.service.CustomerService;
-import org.apache.http.HttpStatus;
-import org.keycloak.KeycloakSecurityContext;
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
-import org.keycloak.util.TokenUtil;
+import ch.supsi.spbd.authSystem.model.Justification;
+import ch.supsi.spbd.authSystem.service.JustificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.net.http.HttpRequest;
 
 @Controller
 @Component
+
 public class ControllerWeb {
     private final HttpServletRequest request;
 
@@ -26,26 +22,71 @@ public class ControllerWeb {
     public ControllerWeb(HttpServletRequest request) {
         this.request = request;
     }
-    @Autowired
-    CustomerService service;
-@RolesAllowed("user_app")
-    @GetMapping("/")
-    public String getCustomers(Model model){
 
-        model.addAttribute("customers",service.getCustomers());
+    @Autowired
+    JustificationService service;
+
+    @GetMapping("/")
+    public String getCustomers(Model model) {
+        if (request.isUserInRole("admin_app")){
+            model.addAttribute("justifications", service.getAllJustifications());
+            model.addAttribute("isAdmin",true);
+
+        }
+        else{
+            model.addAttribute("justifications", service.getJustification());
+            model.addAttribute("isAdmin",false);
+        }
+
         return "index";
     }
-    @RolesAllowed("admin")
 
     @GetMapping("/add")
-    public String addGetCustomers(){
-        return "add";
+    @PreAuthorize("hasAnyRole('user_app','admin_app')")
+    public String addGetCustomers(Model model) {
+        model.addAttribute("item",new Justification());
+        model.addAttribute("action","/add");
+        model.addAttribute("update",false);
+        return "form";
     }
+
     @PostMapping("/add")
-    public String addCustomer(Customer customer){
-        service.addCustomer(customer);
+    @PreAuthorize("hasRole('user_app')")
+    public String addCustomer(Justification customer) {
+        service.addJustification(customer);
+
         return "redirect:/";
     }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('admin_app')")
+    public String deleteJustification(@PathVariable long id) {
+        service.deleteJustification(id);
+        return "redirect:/";
+
+
+    }
+    @GetMapping("/update/{id}")
+    @PreAuthorize("hasRole('admin_app')")
+    public String justifyForm(@PathVariable long id,Model model) {
+        model.addAttribute("item",service.getJustification(id));
+        model.addAttribute("isAdmin",true);
+        model.addAttribute("update",true);
+        model.addAttribute("action","/update/"+id);
+        return "form";
+
+
+    }
+    @PostMapping("/update/{id}")
+    @PreAuthorize("hasRole('admin_app')")
+    public String justify(@PathVariable long id,Justification justification) {
+
+        service.editJustification(id,justification);
+        return "redirect:/";
+
+
+    }
+
     @GetMapping("/logout")
 
     public String logout(HttpServletRequest request) throws ServletException {

@@ -6,17 +6,29 @@
 </head>
 <body>
 <h1>
-    Customer Service
+    Justification Service
 </h1>
+<a th:href="@{/}">Home</a>
+
+<a th:href="@{/add}" th:if="${!isAdmin}">Add Justification</a>
+<a th:href="@{/logout}">logout</a>
+<p th:text="${id}">
+
+</p>
 <table>
     <thead>
-    <th>Name</th>
-    <th>Surname</th>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Status</th>
     </thead>
     <tbody>
-    <tr th:each="customer:${customers}">
-        <td th:text="${customer.getName()}">Mario</td>
-        <td th:text="${customer.getSurname()}">Rossi</td>
+    <tr th:each="justification:${justifications}">
+        <td ><time th:text="${#dates.format(justification.getDate(),'yyyy-MM-dd')}" th:datetime="${#dates.format(justification.getDate(),'yyyy-MM-dd')}"></time></td>
+        <td th:text="${justification.getDescription()}">Rossi</td>
+        <td th:text="${#strings.replace(justification.getStatus(),'_',' ')}">Justified</td>
+            <td th:if="${isAdmin}" ><a th:href="@{'update/'+${justification.getId()}}">Edit</a> </td>
+        <td th:if="${isAdmin}" ><a th:href="@{'delete/'+${justification.getId()}}">Delete</a> </td>
+
     </tr>
     </tbody>
 </table>
