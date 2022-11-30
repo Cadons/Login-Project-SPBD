@@ -27,7 +27,6 @@ public class JustificationService {
                 (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         Principal principal = (Principal) authentication.getPrincipal();
-
         String userIdByMapper = "";
 
         if (principal instanceof KeycloakPrincipal) {
@@ -36,6 +35,14 @@ public class JustificationService {
             userIdByMapper = token.getOtherClaims().get("user_id").toString();
         }
         return userIdByMapper;
+    }
+    public String getUsername() {
+        KeycloakAuthenticationToken authentication =
+                (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        Principal principal = (Principal) authentication.getPrincipal();
+
+        return principal.getName();
     }
     public String getRole() {
         KeycloakAuthenticationToken authentication =
@@ -70,6 +77,8 @@ public class JustificationService {
 
     public Justification addJustification(Justification customer) {
         customer.setUserID(getUserID());
+        customer.setUsername(getUsername());
+        System.out.println(getUsername());
         return repository.save(customer);
     }
 

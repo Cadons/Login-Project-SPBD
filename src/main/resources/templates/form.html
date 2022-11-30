@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
 <head>
     <meta charset="UTF-8">
     <title>Add Justification</title>
 </head>
 <body>
-<h1>
-    Customer Service
-</h1>
-<a th:href="@{/}">Home</a>
-<a th:href="@{/logout}">logout</a>
-<h3>Add customer</h3>
-<form th:action="@{${action}}" method="post">
-    <input type="date" name="date" th:value="${#dates.format(item.getDate(),'yyyy-MM-dd')}" th:disabled="${update}">
-    <textarea name="description" placeholder="Motivation" th:text="${item.getDescription()}" th:disabled="${update}"></textarea>
+<main id="main" class="container">
+    <form th:action="@{${action}}"  style="padding: 10px;" method="post">
+        <input class="form-control" style="padding: 10px" type="date" name="date" th:value="${#dates.format(item.getDate(),'yyyy-MM-dd')}" th:disabled="${update}">
+        <textarea class="form-control" style="padding: 10px" name="description" rows="4" placeholder="Motivation" th:text="${item.getDescription()}" th:disabled="${update}"></textarea>
 
-    <select th:if="${isAdmin}" name="status">
-        <option th:each="status:${T(ch.supsi.spbd.authSystem.model.Status).values()}" th:value="${status}" th:text="${#strings.replace(status,'_',' ')}" th:selected="${item.getStatus()==status}" > </option>
-    </select>
-    <input type="submit" value="submit">
-</form>
+        <select class="form-control" th:if="${isAdmin}" style="padding: 10px" name="status">
+            <option th:each="status:${T(ch.supsi.spbd.authSystem.model.Status).values()}" th:value="${status}" th:text="${#strings.replace(status,'_',' ')}" th:selected="${item.getStatus()==status}" > </option>
+        </select>
+        <label class="form-label">User:</label>
+        <label th:if="${isAdmin}" th:text="${item.getUsername()}" class="form-label" style="padding: 10px">User</label>
+        <button class="btn btn-primary w-100" style="padding: 10px" type="submit">Submit</button>
+    </form>
+</main>
+
 </body>
 </html>

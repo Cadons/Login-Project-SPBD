@@ -22,6 +22,8 @@ public class Justification {
     @Column
     private String userID;
     @Column
+    private String username;
+    @Column
     private Status status=Status.NOT_JUSTIFIED;
 
     public Justification(){
@@ -50,6 +52,14 @@ public class Justification {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setStatus(Status status) {

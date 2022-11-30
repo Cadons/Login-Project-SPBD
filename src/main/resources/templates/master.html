@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="layout(title,metadata,main)">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Title</title>
+    <link th:href="@{/webjars/bootstrap/5.2.2/css/bootstrap.min.css}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white">
+    <!-- Container wrapper -->
+    <div class="container">
+        <!-- Navbar brand -->
+        <a class="navbar-brand me-2" href="/">
+            Justification Service
+        </a>
+
+
+
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" sec:authorize="!hasRole('admin_app')">
+                    <a class="nav-link" href="/add">Add new</a>
+                </li>
+            </ul>
+            <a class="nav-link" href="/logout">
+            <button type="button" class="btn btn-primary">
+                Logout
+            </button>
+            </a>
+    </div>
+    <!-- Collapsible wrapper -->
+    <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->
+<main id="main" th:replace="${main}">
+</main>
+<div class="container" th:fragment="footer">
+    <hr>
+    <footer>
+        <p>&copy; 2021</p>
+    </footer>
+</div>
+</body>
+</html>

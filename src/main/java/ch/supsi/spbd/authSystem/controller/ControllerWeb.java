@@ -27,7 +27,7 @@ public class ControllerWeb {
     JustificationService service;
 
     @GetMapping("/")
-    public String getCustomers(Model model) {
+    public String getAll(Model model) {
         if (request.isUserInRole("admin_app")){
             model.addAttribute("justifications", service.getAllJustifications());
             model.addAttribute("isAdmin",true);
@@ -43,7 +43,7 @@ public class ControllerWeb {
 
     @GetMapping("/add")
     @PreAuthorize("hasAnyRole('user_app','admin_app')")
-    public String addGetCustomers(Model model) {
+    public String getAddJustification(Model model) {
         model.addAttribute("item",new Justification());
         model.addAttribute("action","/add");
         model.addAttribute("update",false);
@@ -52,7 +52,7 @@ public class ControllerWeb {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('user_app')")
-    public String addCustomer(Justification customer) {
+    public String addNew(Justification customer) {
         service.addJustification(customer);
 
         return "redirect:/";
