@@ -1,15 +1,16 @@
 package ch.supsi.spbd.authSystem.controller;
 
 import ch.supsi.spbd.authSystem.model.Justification;
+import ch.supsi.spbd.authSystem.model.TokenResponse;
 import ch.supsi.spbd.authSystem.service.JustificationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.keycloak.Token;
 import org.keycloak.crypto.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -65,32 +66,11 @@ public class RESTController {
 
     @RequestMapping(value = "/api/getToken", method = RequestMethod.POST)
     @PreAuthorize("hasAnyRole('admin_app','user_app')")
-    public ResponseEntity<String> getApiToken(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("otp") String otp) {
+    public ResponseEntity<TokenResponse> getApiToken(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("otp") String otp) throws JsonProcessingException {
         //do a http request to keycloak to get a token
         //first create e restemplate variable
-        RestTemplate restTemplate=new RestTemplate();
-        System.err.println("entered");
-//you can create and edit header
-        HttpHeaders header= new HttpHeaders();
-
-        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.add("Accept", "application/json");
-
-//you can create and edit body to
-        MultiValueMap<String, String> body= new LinkedMultiValueMap<String, String>();
-        body.add("grant_type", "password");
-        body.add("client_secret", "mUeJQzcRqASyZLBZx8ksIHmBntc1HPvU");
-        body.add("client_id", "springboot");
-        body.add("username", username);
-        body.add("password", password);
-        body.add("totp",otp );
-        HttpEntity<MultiValueMap<String, String>> requeteHttp =new HttpEntity<MultiValueMap<String, String>>(body, header);
-
-//After you can create a request
-        ResponseEntity<String> reponse = restTemplate.postForEntity("http://localhost:8080/realms/spbd/protocol/openid-connect/token", requeteHttp , String.class);
-//if you want to send a get request you can edit postForEntity to get
-
-        return reponse;
+        var resp=service.getToken(username,password,otp);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
 

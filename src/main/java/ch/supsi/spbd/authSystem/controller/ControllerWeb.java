@@ -1,8 +1,12 @@
 package ch.supsi.spbd.authSystem.controller;
 
 import ch.supsi.spbd.authSystem.model.Justification;
+import ch.supsi.spbd.authSystem.model.TokenResponse;
 import ch.supsi.spbd.authSystem.service.JustificationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -93,6 +97,19 @@ public class ControllerWeb {
         request.logout();
         return "redirect:/";
     }
+    @GetMapping("/apiKey")
 
+    public String getApi() {
+        return "apiKey";
+    }
+    @PostMapping("/apiKey")
 
+    public String getApiToken(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("otp") String otp,Model model) throws JsonProcessingException {
+        //do a http request to keycloak to get a token
+        //first create e restemplate variable
+
+        var resp=service.getToken(username,password,otp);
+        model.addAttribute("token",resp.getAccess_token());
+        return "apiKey";
+    }
 }

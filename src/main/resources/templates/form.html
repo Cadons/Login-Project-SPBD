@@ -6,6 +6,8 @@
 </head>
 <body>
 <main id="main" class="container">
+    <h1>Justifications</h1>
+
     <form th:action="@{${action}}"  style="padding: 10px;" method="post">
         <input class="form-control" style="padding: 10px" type="date" name="date" th:value="${#dates.format(item.getDate(),'yyyy-MM-dd')}" th:disabled="${update}">
         <textarea class="form-control" style="padding: 10px" name="description" rows="4" placeholder="Motivation" th:text="${item.getDescription()}" th:disabled="${update}"></textarea>
@@ -17,6 +19,7 @@
         <label th:if="${isAdmin}" th:text="${item.getUsername()}" class="form-label" style="padding: 10px">User</label>
         <button class="btn btn-primary w-100" style="padding: 10px" type="submit">Submit</button>
     </form>
+
 </main>
 
 </body>

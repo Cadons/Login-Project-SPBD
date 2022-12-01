@@ -6,7 +6,7 @@
     <title th:replace="${title}">Title</title>
     <link th:href="@{/webjars/bootstrap/5.2.2/css/bootstrap.min.css}" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <script th:src="@{/js/input.js}"></script>
 </head>
 <body>
 <!-- Navbar -->
@@ -24,6 +24,9 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item" sec:authorize="!hasRole('admin_app')">
                     <a class="nav-link" href="/add">Add new</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/apiKey">API Key</a>
                 </li>
             </ul>
             <a class="nav-link" href="/logout">

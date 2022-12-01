@@ -1,15 +1,25 @@
 package ch.supsi.spbd.authSystem.service;
 
 import ch.supsi.spbd.authSystem.model.Justification;
+import ch.supsi.spbd.authSystem.model.TokenResponse;
 import ch.supsi.spbd.authSystem.repository.JustificationRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.IDToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 import java.sql.Date;
@@ -64,6 +74,33 @@ public class JustificationService {
     }
     public List<Justification> getAllJustifications() {
         return repository.findAll();
+    }
+    public TokenResponse getToken(String username, String password, String otp) throws JsonProcessingException {
+
+        RestTemplate restTemplate=new RestTemplate();
+//you can create and edit header
+        HttpHeaders header= new HttpHeaders();
+
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        header.add("Accept", "application/json");
+
+//you can create and edit body to
+        MultiValueMap<String, String> body= new LinkedMultiValueMap<String, String>();
+        body.add("grant_type", "password");
+        body.add("client_secret", "mUeJQzcRqASyZLBZx8ksIHmBntc1HPvU");
+        body.add("client_id", "springboot");
+        body.add("username", username);
+        body.add("password", password);
+        body.add("totp",otp );
+        HttpEntity<MultiValueMap<String, String>> requeteHttp =new HttpEntity<MultiValueMap<String, String>>(body, header);
+
+//After you can create a request
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/realms/spbd/protocol/openid-connect/token", requeteHttp , String.class);
+//if you want to send a get request you can edit postForEntity to get
+        String filteredResponse=  response.getBody().replace("not-before-policy","not_before_policy");
+        ObjectMapper mapper = new ObjectMapper();
+        var resp= mapper.readValue(filteredResponse, TokenResponse.class);
+        return resp;
     }
     public Justification getJustification(long id) {
 
