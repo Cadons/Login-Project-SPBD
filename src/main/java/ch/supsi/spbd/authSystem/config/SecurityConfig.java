@@ -75,10 +75,17 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         super.configure(http);
 
 
-        http.anonymous().disable()
+       //allow requests to /api to user_app,allow / /{id} /add to all users /update /delete/{id} to admin_app
+        http.anonymous().disable().authorizeRequests()
+                .antMatchers("/api/**").hasRole("user_app")
+                .antMatchers("/*").permitAll()
+                .antMatchers("/add").permitAll()
+                .antMatchers("/update").hasRole("admin_app")
+                .antMatchers("/delete/{id}").hasRole("admin_app")
+                .anyRequest().authenticated()
+                .and().csrf().disable();
 
-                .authorizeRequests()
-                .anyRequest().permitAll();
+
     }
 
 

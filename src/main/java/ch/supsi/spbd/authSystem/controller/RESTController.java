@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.jwt.Jwt;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
@@ -58,6 +61,36 @@ public class RESTController {
 
     public ResponseEntity<Justification> _editJustification(@PathVariable long id, Justification justification) {
         return ResponseEntity.ok(service.editJustification(id, justification));
+    }
+
+    @RequestMapping(value = "/api/getToken", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('admin_app','user_app')")
+    public ResponseEntity<String> getApiToken(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("otp") String otp) {
+        //do a http request to keycloak to get a token
+        //first create e restemplate variable
+        RestTemplate restTemplate=new RestTemplate();
+        System.err.println("entered");
+//you can create and edit header
+        HttpHeaders header= new HttpHeaders();
+
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        header.add("Accept", "application/json");
+
+//you can create and edit body to
+        MultiValueMap<String, String> body= new LinkedMultiValueMap<String, String>();
+        body.add("grant_type", "password");
+        body.add("client_secret", "mUeJQzcRqASyZLBZx8ksIHmBntc1HPvU");
+        body.add("client_id", "springboot");
+        body.add("username", username);
+        body.add("password", password);
+        body.add("totp",otp );
+        HttpEntity<MultiValueMap<String, String>> requeteHttp =new HttpEntity<MultiValueMap<String, String>>(body, header);
+
+//After you can create a request
+        ResponseEntity<String> reponse = restTemplate.postForEntity("http://localhost:8080/realms/spbd/protocol/openid-connect/token", requeteHttp , String.class);
+//if you want to send a get request you can edit postForEntity to get
+
+        return reponse;
     }
 
 
