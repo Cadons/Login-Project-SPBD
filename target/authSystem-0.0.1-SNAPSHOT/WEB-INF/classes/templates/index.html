@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <title>My Justifications</title>
+</head>
+<body>
+<main id="main" class="container">
+    <table class="table-responsive-sm table">
+        <thead>
+        <th>Date</th>
+        <th>Status</th>
+        <th>User</th>
+        </thead>
+        <tbody>
+        <tr th:each="justification:${justifications}">
+            <td>
+                <time th:text="${#dates.format(justification.getDate(),'yyyy-MM-dd')}"
+                      th:datetime="${#dates.format(justification.getDate(),'yyyy-MM-dd')}"></time>
+            </td>
+            <td th:text="${#strings.replace(justification.getStatus(),'_',' ')}">Justified</td>
+            <td th:text="${justification.getUsername()}">Rossi</td>
+            <td th:if="${isAdmin}"><a th:href="@{'update/'+${justification.getId()}}">
+                <button class="btn btn-primary w-100">Edit</button>
+            </a></td>
+            <td th:if="${isAdmin}"><a th:href="@{'delete/'+${justification.getId()}}">
+                <button class="btn btn-danger w-100">Delete</button>
+            </a></td>
+
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

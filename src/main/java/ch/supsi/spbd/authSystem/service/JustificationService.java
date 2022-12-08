@@ -95,7 +95,7 @@ public class JustificationService {
         HttpEntity<MultiValueMap<String, String>> requeteHttp =new HttpEntity<MultiValueMap<String, String>>(body, header);
 
 //After you can create a request
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/realms/spbd/protocol/openid-connect/token", requeteHttp , String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://auth.supsilab.ch/realms/spbd/protocol/openid-connect/token", requeteHttp , String.class);
 //if you want to send a get request you can edit postForEntity to get
         String filteredResponse=  response.getBody().replace("not-before-policy","not_before_policy");
         ObjectMapper mapper = new ObjectMapper();

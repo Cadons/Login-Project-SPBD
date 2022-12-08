@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(~{::title},~{::meta},~{::main})}">
+<head>
+  <meta charset="UTF-8">
+
+  <title>API Key</title>
+
+</head>
+<body>
+
+<main id="main" class="container">
+  <h1>API Key</h1>
+  <p>Login to get API token:</p>
+
+  <form class="form" action="/apiKey" method="post">
+
+    <input class="form-control" type="text" name="username" style="padding: 10px" placeholder="Username">
+    <input class="form-control" type="password"  name="password"  style="padding: 10px" placeholder="Password">
+    <input class="form-control" type="number"  name="otp"  style="padding: 10px"placeholder="OTP">
+    <button class="btn btn-primary w-100" style="padding: 10px">Get Token</button>
+  </form>
+  <p>Token</p>
+  <textarea class="w-100 form-control" rows="5" style="resize: none " id="tokenArea" onclick="copy()" th:text="${token}"  disabled></textarea>
+</main>
+</body>
+</html>

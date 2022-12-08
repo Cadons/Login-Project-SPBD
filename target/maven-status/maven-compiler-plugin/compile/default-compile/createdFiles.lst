@@ -1,0 +1,11 @@
+ch\supsi\spbd\authSystem\config\SecurityConfig.class
+ch\supsi\spbd\authSystem\ServletInitializer.class
+ch\supsi\spbd\authSystem\model\Status.class
+ch\supsi\spbd\authSystem\service\JustificationService.class
+ch\supsi\spbd\authSystem\AuthSystemApplication.class
+ch\supsi\spbd\authSystem\controller\RESTController.class
+ch\supsi\spbd\authSystem\config\KeycloakConfig.class
+ch\supsi\spbd\authSystem\model\TokenResponse.class
+ch\supsi\spbd\authSystem\repository\JustificationRepository.class
+ch\supsi\spbd\authSystem\model\Justification.class
+ch\supsi\spbd\authSystem\controller\ControllerWeb.class
